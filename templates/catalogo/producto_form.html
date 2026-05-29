@@ -3,11 +3,18 @@
 {% block nav_productos %}active{% endblock %}
 
 {% block content %}
-<div class="d-flex align-items-center gap-2 mb-4">
-  <a href="{% url 'catalogo:producto_lista' %}" class="btn btn-sm btn-outline-secondary">
-    <i class="bi bi-arrow-left"></i>
+<div class="d-flex align-items-center justify-content-between mb-4">
+  <div class="d-flex align-items-center gap-2">
+    <a href="{% url 'catalogo:producto_lista' %}" class="btn btn-sm btn-outline-secondary">
+      <i class="bi bi-arrow-left"></i>
+    </a>
+    <h2 class="mb-0">{{ titulo }}</h2>
+  </div>
+  {% if producto %}
+  <a href="{% url 'catalogo:producto_historial' producto.pk %}" class="btn btn-sm btn-outline-secondary">
+    <i class="bi bi-clock-history"></i> Historial de precios
   </a>
-  <h2 class="mb-0">{{ titulo }}</h2>
+  {% endif %}
 </div>
 
 <div class="row g-4">

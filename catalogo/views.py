@@ -8,7 +8,7 @@ from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
 
 from .forms import CategoriaForm, PrecioProveedorForm, ProductoForm, ProveedorForm
-from .models import Categoria, Producto, Proveedor
+from .models import Categoria, HistorialPrecio, Producto, Proveedor
 
 
 # ── Categorías ───────────────────────────────────────────────────────────────
@@ -95,9 +95,17 @@ def producto_crear(request):
 @login_required
 def producto_editar(request, pk):
     producto = get_object_or_404(Producto, pk=pk)
+    costo_anterior = producto.costo
     form = ProductoForm(request.POST or None, instance=producto)
     if form.is_valid():
-        form.save()
+        guardado = form.save()
+        if guardado.costo != costo_anterior:
+            HistorialPrecio.objects.create(
+                producto=guardado,
+                costo_anterior=costo_anterior,
+                costo_nuevo=guardado.costo,
+                usuario=request.user,
+            )
         messages.success(request, 'Producto actualizado.')
         return redirect('catalogo:producto_lista')
     precios = producto.precios_proveedor.select_related('proveedor').all()
@@ -121,6 +129,16 @@ def producto_eliminar(request, pk):
     return render(request, 'catalogo/confirm_delete.html', {
         'objeto': producto,
         'cancelar_url': 'catalogo:producto_lista',
+    })
+
+
+@login_required
+def producto_historial(request, pk):
+    producto = get_object_or_404(Producto, pk=pk)
+    historial = producto.historial_precios.select_related('usuario').all()
+    return render(request, 'catalogo/producto_historial.html', {
+        'producto': producto,
+        'historial': historial,
     })
 
 
@@ -172,6 +190,84 @@ def producto_importar_csv(request):
         return redirect('catalogo:producto_lista')
 
     return render(request, 'catalogo/producto_importar.html')
+
+
+# ── Precios y márgenes ───────────────────────────────────────────────────────
+
+@login_required
+def actualizacion_masiva(request):
+    categorias = Categoria.objects.all()
+    preview = None
+
+    if request.method == 'POST':
+        categoria_id = request.POST.get('categoria')
+        try:
+            porcentaje = Decimal(request.POST.get('porcentaje', '0').replace(',', '.'))
+        except InvalidOperation:
+            messages.error(request, 'Porcentaje inválido.')
+            return render(request, 'catalogo/actualizacion_masiva.html', {'categorias': categorias})
+
+        categoria = get_object_or_404(Categoria, pk=categoria_id)
+        productos = list(Producto.objects.filter(categoria=categoria))
+
+        if not productos:
+            messages.warning(request, f'La categoría "{categoria.nombre}" no tiene productos.')
+            return render(request, 'catalogo/actualizacion_masiva.html', {'categorias': categorias})
+
+        factor = 1 + porcentaje / 100
+        historial_bulk = []
+        for p in productos:
+            costo_anterior = p.costo
+            p.costo = (p.costo * factor).quantize(Decimal('0.01'))
+            historial_bulk.append(HistorialPrecio(
+                producto=p,
+                costo_anterior=costo_anterior,
+                costo_nuevo=p.costo,
+                usuario=request.user,
+            ))
+
+        Producto.objects.bulk_update(productos, ['costo'])
+        HistorialPrecio.objects.bulk_create(historial_bulk)
+
+        signo = '+' if porcentaje >= 0 else ''
+        messages.success(
+            request,
+            f'{len(productos)} productos de "{categoria.nombre}" actualizados ({signo}{porcentaje}%).'
+        )
+        return redirect('catalogo:actualizacion_masiva')
+
+    # Vista previa HTMX al cambiar categoría
+    categoria_id = request.GET.get('categoria')
+    if categoria_id:
+        try:
+            cat = Categoria.objects.get(pk=categoria_id)
+            preview = cat.productos.all()
+        except Categoria.DoesNotExist:
+            pass
+
+    return render(request, 'catalogo/actualizacion_masiva.html', {
+        'categorias': categorias,
+        'preview': preview,
+    })
+
+
+@login_required
+def margen_riesgo(request):
+    try:
+        umbral = Decimal(request.GET.get('umbral', '20'))
+    except InvalidOperation:
+        umbral = Decimal('20')
+
+    productos = (
+        Producto.objects
+        .select_related('categoria')
+        .filter(categoria__margen_porcentaje__lt=umbral)
+        .order_by('categoria__margen_porcentaje', 'nombre')
+    )
+    return render(request, 'catalogo/margen_riesgo.html', {
+        'productos': productos,
+        'umbral': umbral,
+    })
 
 
 # ── Proveedores ──────────────────────────────────────────────────────────────

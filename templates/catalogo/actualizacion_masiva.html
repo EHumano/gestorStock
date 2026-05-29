@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+{% block title %}Actualización masiva de precios{% endblock %}
+{% block nav_precios %}active{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h2 class="mb-0">Precios y márgenes</h2>
+  <a href="{% url 'catalogo:margen_riesgo' %}" class="btn btn-outline-warning">
+    <i class="bi bi-exclamation-triangle"></i> Ver margen en riesgo
+  </a>
+</div>
+
+<div class="row g-4">
+  <div class="col-md-5">
+    <div class="card shadow-sm border-0">
+      <div class="card-header bg-light fw-semibold">
+        <i class="bi bi-arrow-up-circle"></i> Actualización masiva de costos
+      </div>
+      <div class="card-body p-4">
+        <p class="text-muted small mb-4">
+          Subí o bajá el costo de todos los productos de una categoría aplicando un porcentaje.
+          El precio de venta se recalcula automáticamente.
+        </p>
+        <form method="post">
+          {% csrf_token %}
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Categoría</label>
+            <select
+              name="categoria"
+              class="form-select"
+              required
+              hx-get="{% url 'catalogo:actualizacion_masiva' %}"
+              hx-trigger="change"
+              hx-target="#preview-productos"
+              hx-include="[name='categoria']"
+            >
+              <option value="">Seleccioná una categoría...</option>
+              {% for cat in categorias %}
+              <option value="{{ cat.pk }}">{{ cat.nombre }} ({{ cat.margen_porcentaje }}% margen)</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="mb-4">
+            <label class="form-label fw-semibold">Variación de costo (%)</label>
+            <div class="input-group">
+              <input
+                type="number"
+                name="porcentaje"
+                class="form-control"
+                step="0.01"
+                placeholder="ej: 30 para subir 30%, -10 para bajar 10%"
+                required
+              >
+              <span class="input-group-text">%</span>
+            </div>
+            <div class="form-text">Positivo = aumento · Negativo = reducción</div>
+          </div>
+          <button type="submit" class="btn btn-primary w-100">
+            <i class="bi bi-check-lg"></i> Aplicar actualización
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-7">
+    <div class="card shadow-sm border-0">
+      <div class="card-header bg-light fw-semibold">
+        Productos afectados
+      </div>
+      <div id="preview-productos">
+        {% if preview %}
+          <table class="table table-sm mb-0">
+            <thead class="table-light">
+              <tr>
+                <th>Código</th>
+                <th>Nombre</th>
+                <th class="text-end">Costo actual</th>
+                <th class="text-end">Precio venta</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for p in preview %}
+              <tr>
+                <td class="text-muted small">{{ p.codigo_interno }}</td>
+                <td>{{ p.nombre }}</td>
+                <td class="text-end">${{ p.costo|floatformat:2 }}</td>
+                <td class="text-end">${{ p.precio_venta|floatformat:2 }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        {% else %}
+          <div class="text-center text-muted py-5">
+            <i class="bi bi-arrow-left-circle"></i> Seleccioná una categoría para ver los productos.
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

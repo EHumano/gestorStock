@@ -57,6 +57,22 @@ class Producto(models.Model):
         ordering = ['nombre']
 
 
+class HistorialPrecio(models.Model):
+    producto = models.ForeignKey('Producto', on_delete=models.CASCADE, related_name='historial_precios')
+    costo_anterior = models.DecimalField(max_digits=12, decimal_places=2)
+    costo_nuevo = models.DecimalField(max_digits=12, decimal_places=2)
+    usuario = models.ForeignKey('auth.User', on_delete=models.SET_NULL, null=True, blank=True)
+    fecha = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.producto.codigo_interno} | {self.costo_anterior} → {self.costo_nuevo}"
+
+    class Meta:
+        verbose_name = "Historial de precio"
+        verbose_name_plural = "Historial de precios"
+        ordering = ['-fecha']
+
+
 class PrecioProveedor(models.Model):
     producto = models.ForeignKey(Producto, on_delete=models.CASCADE, related_name='precios_proveedor')
     proveedor = models.ForeignKey(Proveedor, on_delete=models.CASCADE, related_name='precios')

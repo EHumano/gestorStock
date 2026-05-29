@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block title %}Historial de precios — {{ producto.nombre }}{% endblock %}
+{% block nav_productos %}active{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center gap-2 mb-4">
+  <a href="{% url 'catalogo:producto_editar' producto.pk %}" class="btn btn-sm btn-outline-secondary">
+    <i class="bi bi-arrow-left"></i>
+  </a>
+  <div>
+    <h2 class="mb-0">Historial de precios</h2>
+    <small class="text-muted">{{ producto.codigo_interno }} — {{ producto.nombre }}</small>
+  </div>
+</div>
+
+{% if historial %}
+<div class="card shadow-sm border-0">
+  <table class="table table-hover mb-0">
+    <thead class="table-light">
+      <tr>
+        <th>Fecha</th>
+        <th class="text-end">Costo anterior</th>
+        <th class="text-end">Costo nuevo</th>
+        <th class="text-end">Variación</th>
+        <th>Usuario</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for h in historial %}
+      {% with variacion=h.costo_nuevo|floatformat:2 %}
+      <tr>
+        <td class="text-muted small">{{ h.fecha|date:"d/m/Y H:i" }}</td>
+        <td class="text-end">${{ h.costo_anterior|floatformat:2 }}</td>
+        <td class="text-end fw-semibold">${{ h.costo_nuevo|floatformat:2 }}</td>
+        <td class="text-end">
+          {% if h.costo_nuevo > h.costo_anterior %}
+            <span class="text-danger small">
+              <i class="bi bi-arrow-up"></i>
+              +${{ h.costo_nuevo|add:h.costo_anterior|floatformat:2 }}
+            </span>
+          {% elif h.costo_nuevo < h.costo_anterior %}
+            <span class="text-success small">
+              <i class="bi bi-arrow-down"></i>
+            </span>
+          {% else %}
+            <span class="text-muted small">sin cambio</span>
+          {% endif %}
+        </td>
+        <td class="text-muted small">{{ h.usuario.username|default:"—" }}</td>
+      </tr>
+      {% endwith %}
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% else %}
+<div class="text-center text-muted py-5">
+  <i class="bi bi-clock-history fs-1"></i>
+  <p class="mt-2">Sin cambios de precio registrados para este producto.</p>
+</div>
+{% endif %}
+{% endblock %}

@@ -18,6 +18,11 @@ urlpatterns = [
     path('productos/<int:pk>/editar/', views.producto_editar, name='producto_editar'),
     path('productos/<int:pk>/eliminar/', views.producto_eliminar, name='producto_eliminar'),
 
+    # Precios y márgenes
+    path('precios/actualizacion-masiva/', views.actualizacion_masiva, name='actualizacion_masiva'),
+    path('precios/margen-riesgo/', views.margen_riesgo, name='margen_riesgo'),
+    path('productos/<int:pk>/historial/', views.producto_historial, name='producto_historial'),
+
     # Proveedores
     path('proveedores/', views.proveedor_lista, name='proveedor_lista'),
     path('proveedores/nuevo/', views.proveedor_crear, name='proveedor_crear'),

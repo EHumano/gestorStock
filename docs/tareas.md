@@ -40,14 +40,14 @@
 
 ---
 
-## Fase 3 — Precios y márgenes (~1 semana)
+## Fase 3 — Precios y márgenes ✅ COMPLETA
 
-- [ ] Cálculo automático del precio de venta según margen de categoría
-- [ ] Vista de actualización masiva de precios por categoría (subir % de costo en un clic)
-- [ ] Historial de cambios de precio por producto (quién y cuándo)
-- [ ] Vista "margen en riesgo": productos con precio de venta muy cerca del costo
+- [x] Cálculo automático del precio de venta según margen de categoría
+- [x] Vista de actualización masiva de precios por categoría (subir % de costo en un clic)
+- [x] Historial de cambios de precio por producto (quién y cuándo)
+- [x] Vista "margen en riesgo": productos con precio de venta muy cerca del costo
 
-**Entregable:** actualizar precios tras un aumento de proveedor toma minutos, no horas.
+**Entregable:** actualizar precios tras un aumento de proveedor toma minutos, no horas. ✅
 
 ---
 
@@ -96,4 +96,4 @@ Facturación fiscal · Contabilidad · CRM · Agenda de turnos · Cálculo autom
 
 ---
 
-*Última actualización: 2026-05-28 — Fases 1 y 2 completas. Próximo: Fase 3 (Precios y márgenes).*
+*Última actualización: 2026-05-28 — Fases 1, 2 y 3 completas. Próximo: Fase 4 (Compatibilidades).*

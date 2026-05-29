@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block title %}Margen en riesgo{% endblock %}
+{% block nav_precios %}active{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center gap-2 mb-4">
+  <a href="{% url 'catalogo:actualizacion_masiva' %}" class="btn btn-sm btn-outline-secondary">
+    <i class="bi bi-arrow-left"></i>
+  </a>
+  <h2 class="mb-0">Margen en riesgo</h2>
+</div>
+
+<div class="card shadow-sm border-0 mb-4">
+  <div class="card-body py-2 px-3">
+    <form class="d-flex align-items-center gap-3">
+      <label class="fw-semibold mb-0 text-nowrap">Mostrar categorías con margen menor a</label>
+      <div class="input-group" style="max-width:160px">
+        <input
+          type="number"
+          name="umbral"
+          value="{{ umbral }}"
+          class="form-control"
+          step="1"
+          min="0"
+        >
+        <span class="input-group-text">%</span>
+      </div>
+      <button type="submit" class="btn btn-outline-secondary btn-sm">Filtrar</button>
+    </form>
+  </div>
+</div>
+
+{% if productos %}
+<div class="card shadow-sm border-0">
+  <table class="table table-hover mb-0">
+    <thead class="table-light">
+      <tr>
+        <th>Código</th>
+        <th>Producto</th>
+        <th>Categoría</th>
+        <th class="text-end text-warning">Margen</th>
+        <th class="text-end">Costo</th>
+        <th class="text-end">Precio venta</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for p in productos %}
+      <tr>
+        <td class="text-muted small">{{ p.codigo_interno }}</td>
+        <td class="fw-semibold">{{ p.nombre }}</td>
+        <td>{{ p.categoria.nombre }}</td>
+        <td class="text-end">
+          <span class="badge bg-warning text-dark">{{ p.categoria.margen_porcentaje }}%</span>
+        </td>
+        <td class="text-end">${{ p.costo|floatformat:2 }}</td>
+        <td class="text-end">${{ p.precio_venta|floatformat:2 }}</td>
+        <td class="text-end">
+          <a href="{% url 'catalogo:categoria_editar' p.categoria.pk %}" class="btn btn-sm btn-outline-warning">
+            <i class="bi bi-percent"></i>
+          </a>
+          <a href="{% url 'catalogo:producto_editar' p.pk %}" class="btn btn-sm btn-outline-secondary">
+            <i class="bi bi-pencil"></i>
+          </a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+<div class="text-muted small mt-2">{{ productos|length }} producto(s) con margen menor a {{ umbral }}%.</div>
+{% else %}
+<div class="text-center text-muted py-5">
+  <i class="bi bi-check-circle fs-1 text-success"></i>
+  <p class="mt-2">No hay productos con margen menor a <strong>{{ umbral }}%</strong>.</p>
+</div>
+{% endif %}
+{% endblock %}
