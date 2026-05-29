@@ -89,6 +89,9 @@
         </li>
       </ul>
       <div class="mt-auto px-3 pt-3 border-top border-secondary">
+        <a href="/configuracion/" class="nav-link {% block nav_config %}{% endblock %} mb-2 px-0">
+          <i class="bi bi-gear"></i> Configuración
+        </a>
         <small class="text-secondary d-block mb-2">{{ user.username }}</small>
         <form method="post" action="/logout/">
           {% csrf_token %}

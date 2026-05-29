@@ -8,6 +8,7 @@ urlpatterns = [
     path('login/', auth_views.LoginView.as_view(), name='login'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('', core_views.inicio, name='inicio'),
+    path('configuracion/', core_views.taller_config, name='configuracion'),
     path('catalogo/', include('catalogo.urls')),
     path('compatibilidades/', include('compatibilidades.urls')),
     path('cotizacion/', include('cotizacion.urls')),

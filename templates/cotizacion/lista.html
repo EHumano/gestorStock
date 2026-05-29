@@ -1,7 +1,77 @@
 {% extends "base.html" %}
 {% block title %}Presupuestos{% endblock %}
 {% block nav_presupuestos %}active{% endblock %}
+
 {% block content %}
-<h2>Presupuestos</h2>
-<p class="text-muted">Próximamente — Fase 5.</p>
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h2 class="mb-0">Presupuestos</h2>
+  <a href="{% url 'cotizacion:crear' %}" class="btn btn-primary">
+    <i class="bi bi-plus-lg"></i> Nuevo presupuesto
+  </a>
+</div>
+
+<div class="mb-3 d-flex gap-2">
+  <a href="{% url 'cotizacion:lista' %}" class="btn btn-sm {% if not estado_filtro %}btn-secondary{% else %}btn-outline-secondary{% endif %}">Todos</a>
+  {% for valor, label in estados %}
+  <a href="?estado={{ valor }}" class="btn btn-sm {% if estado_filtro == valor %}btn-secondary{% else %}btn-outline-secondary{% endif %}">{{ label }}</a>
+  {% endfor %}
+</div>
+
+{% if presupuestos %}
+<div class="card shadow-sm border-0">
+  <table class="table table-hover mb-0">
+    <thead class="table-light">
+      <tr>
+        <th>#</th>
+        <th>Cliente</th>
+        <th>Fecha</th>
+        <th>Estado</th>
+        <th class="text-end">Total</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for p in presupuestos %}
+      <tr>
+        <td class="text-muted">{{ p.pk }}</td>
+        <td class="fw-semibold">{{ p.cliente }}</td>
+        <td class="text-muted small">{{ p.fecha|date:"d/m/Y" }}</td>
+        <td>
+          {% if p.estado == 'aceptado' %}
+            <span class="badge bg-success">Aceptado</span>
+          {% elif p.estado == 'rechazado' %}
+            <span class="badge bg-danger">Rechazado</span>
+          {% else %}
+            <span class="badge bg-secondary">Borrador</span>
+          {% endif %}
+        </td>
+        <td class="text-end fw-semibold">${{ p.total|floatformat:2 }}</td>
+        <td class="text-end">
+          <a href="{% url 'cotizacion:editar' p.pk %}" class="btn btn-sm btn-outline-secondary">
+            <i class="bi bi-pencil"></i>
+          </a>
+          <a href="{% url 'cotizacion:pdf' p.pk %}" class="btn btn-sm btn-outline-primary" target="_blank">
+            <i class="bi bi-file-pdf"></i>
+          </a>
+          {% if p.estado == 'borrador' %}
+          <a href="{% url 'cotizacion:eliminar' p.pk %}" class="btn btn-sm btn-outline-danger">
+            <i class="bi bi-trash"></i>
+          </a>
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% else %}
+<div class="text-center text-muted py-5">
+  <i class="bi bi-receipt fs-1"></i>
+  <p class="mt-2">
+    {% if estado_filtro %}No hay presupuestos con ese estado.
+    {% else %}No hay presupuestos aún. <a href="{% url 'cotizacion:crear' %}">Crear el primero</a>.
+    {% endif %}
+  </p>
+</div>
+{% endif %}
 {% endblock %}

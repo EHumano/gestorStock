@@ -1,0 +1,75 @@
+<div class="card shadow-sm border-0 mb-3">
+  <div class="card-header bg-light fw-semibold">Resumen</div>
+  <div class="card-body">
+    <div class="d-flex justify-content-between mb-1">
+      <span class="text-muted">Repuestos</span>
+      <span>${{ presupuesto.subtotal_items|floatformat:2 }}</span>
+    </div>
+
+    {% if presupuesto.estado == 'borrador' %}
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <span class="text-muted">Mano de obra</span>
+      <form
+        hx-post="{% url 'cotizacion:mano_de_obra' presupuesto.pk %}"
+        hx-target="#resumen-total"
+        hx-swap="outerHTML"
+      >
+        {% csrf_token %}
+        <input
+          type="number"
+          name="mano_de_obra"
+          value="{{ presupuesto.mano_de_obra|floatformat:2 }}"
+          class="form-control form-control-sm text-end"
+          style="width:110px"
+          step="0.01" min="0"
+          hx-trigger="change delay:600ms"
+        >
+      </form>
+    </div>
+    {% else %}
+    <div class="d-flex justify-content-between mb-3">
+      <span class="text-muted">Mano de obra</span>
+      <span>${{ presupuesto.mano_de_obra|floatformat:2 }}</span>
+    </div>
+    {% endif %}
+
+    <hr class="my-2">
+    <div class="d-flex justify-content-between fw-bold fs-5">
+      <span>TOTAL</span>
+      <span>${{ presupuesto.total|floatformat:2 }}</span>
+    </div>
+  </div>
+</div>
+
+{% if presupuesto.estado == 'borrador' %}
+<div class="d-grid gap-2">
+  <a href="{% url 'cotizacion:pdf' presupuesto.pk %}" target="_blank" class="btn btn-outline-primary">
+    <i class="bi bi-file-pdf"></i> Ver PDF
+  </a>
+  <form method="post" action="{% url 'cotizacion:aceptar' presupuesto.pk %}">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-success w-100"
+      onclick="return confirm('¿Aceptar presupuesto y descontar stock?')">
+      <i class="bi bi-check-lg"></i> Aceptar y descontar stock
+    </button>
+  </form>
+  <form method="post" action="{% url 'cotizacion:rechazar' presupuesto.pk %}">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-outline-danger w-100">
+      <i class="bi bi-x-lg"></i> Rechazar
+    </button>
+  </form>
+</div>
+{% elif presupuesto.estado == 'aceptado' %}
+<div class="d-grid">
+  <a href="{% url 'cotizacion:pdf' presupuesto.pk %}" target="_blank" class="btn btn-primary">
+    <i class="bi bi-file-pdf"></i> Descargar PDF
+  </a>
+</div>
+{% else %}
+<div class="d-grid">
+  <a href="{% url 'cotizacion:pdf' presupuesto.pk %}" target="_blank" class="btn btn-outline-secondary">
+    <i class="bi bi-file-pdf"></i> Ver PDF
+  </a>
+</div>
+{% endif %}

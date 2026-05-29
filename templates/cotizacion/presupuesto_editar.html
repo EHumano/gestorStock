@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block title %}Presupuesto #{{ presupuesto.pk }} — {{ presupuesto.cliente }}{% endblock %}
+{% block nav_presupuestos %}active{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center justify-content-between mb-4">
+  <div class="d-flex align-items-center gap-2">
+    <a href="{% url 'cotizacion:lista' %}" class="btn btn-sm btn-outline-secondary">
+      <i class="bi bi-arrow-left"></i>
+    </a>
+    <div>
+      <h2 class="mb-0">Presupuesto #{{ presupuesto.pk }}</h2>
+      <small class="text-muted">{{ presupuesto.cliente }} · {{ presupuesto.fecha|date:"d/m/Y" }}</small>
+    </div>
+  </div>
+  <div>
+    {% if presupuesto.estado == 'aceptado' %}
+      <span class="badge bg-success fs-6">Aceptado</span>
+    {% elif presupuesto.estado == 'rechazado' %}
+      <span class="badge bg-danger fs-6">Rechazado</span>
+    {% else %}
+      <span class="badge bg-secondary fs-6">Borrador</span>
+    {% endif %}
+  </div>
+</div>
+
+<div class="row g-4">
+
+  {# ── Columna izquierda: búsqueda + ítems ── #}
+  <div class="col-lg-8">
+
+    {% if presupuesto.estado == 'borrador' %}
+    <div class="card shadow-sm border-0 mb-3">
+      <div class="card-body p-3">
+        <label class="form-label fw-semibold mb-2">
+          <i class="bi bi-search"></i> Buscar pieza para agregar
+        </label>
+        <input
+          type="text"
+          name="q"
+          class="form-control"
+          placeholder="Nombre o código..."
+          hx-get="{% url 'cotizacion:buscar_productos' presupuesto.pk %}"
+          hx-trigger="keyup changed delay:300ms"
+          hx-target="#busqueda-resultados"
+        >
+      </div>
+      <div id="busqueda-resultados" class="px-3 pb-2"></div>
+    </div>
+    {% endif %}
+
+    <div class="card shadow-sm border-0">
+      <div class="card-header bg-light fw-semibold">
+        Ítems del presupuesto
+      </div>
+      <div id="lista-items">
+        {% include "cotizacion/items_tabla.html" %}
+      </div>
+    </div>
+  </div>
+
+  {# ── Columna derecha: resumen + acciones ── #}
+  <div class="col-lg-4">
+    <div id="resumen-total">
+      {% include "cotizacion/resumen_content.html" %}
+    </div>
+  </div>
+
+</div>
+{% endblock %}

@@ -63,20 +63,20 @@
 
 ---
 
-## Fase 5 — Cotización — núcleo del MVP (~2 semanas)
+## Fase 5 — Cotización — núcleo del MVP ✅ COMPLETA
 
 ### Modelos
-- [ ] `Presupuesto` — cliente, fecha, estado (borrador/aceptado/rechazado), mano_de_obra, total
-- [ ] `ItemPresupuesto` — FK a Presupuesto y Producto, cantidad, precio_unitario, subtotal
+- [x] `Presupuesto` — cliente, fecha, estado (borrador/aceptado/rechazado), mano_de_obra, total
+- [x] `ItemPresupuesto` — FK a Presupuesto y Producto, cantidad, precio_unitario, subtotal
 
 ### Funciones
-- [ ] Buscador de piezas en tiempo real con HTMX mientras se arma el presupuesto
-- [ ] Campo libre para mano de obra (ingresado manualmente por el dueño)
-- [ ] Cálculo automático del total (repuestos + mano de obra)
-- [ ] Cambio de estado: borrador → aceptado → descuento automático de stock
-- [ ] Exportar presupuesto a PDF con logo y datos del taller (WeasyPrint)
+- [x] Buscador de piezas en tiempo real con HTMX mientras se arma el presupuesto
+- [x] Campo libre para mano de obra (ingresado manualmente por el dueño)
+- [x] Cálculo automático del total (repuestos + mano de obra)
+- [x] Cambio de estado: borrador → aceptado → descuento automático de stock
+- [x] Exportar presupuesto a PDF con logo y datos del taller (WeasyPrint)
 
-**Entregable:** flujo completo de punta a punta — el cliente entra y sale con un presupuesto.
+**Entregable:** flujo completo de punta a punta — el cliente entra y sale con un presupuesto. ✅
 
 ---
 
@@ -96,4 +96,4 @@ Facturación fiscal · Contabilidad · CRM · Agenda de turnos · Cálculo autom
 
 ---
 
-*Última actualización: 2026-05-28 — Fases 1 a 4 completas. Próximo: Fase 5 (Cotización — núcleo del MVP).*
+*Última actualización: 2026-05-28 — MVP COMPLETO. Todas las fases 1 a 5 terminadas.*

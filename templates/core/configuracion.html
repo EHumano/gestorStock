@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Configuración del taller{% endblock %}
+{% block nav_config %}active{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center mt-2">
+  <div class="col-md-6">
+    <h2 class="mb-4">Configuración del taller</h2>
+    <div class="card shadow-sm border-0">
+      <div class="card-body p-4">
+        <p class="text-muted small mb-4">
+          Estos datos aparecen en los presupuestos en PDF.
+        </p>
+        <form method="post">
+          {% csrf_token %}
+          {% for field in form %}
+          <div class="mb-3">
+            <label class="form-label fw-semibold">{{ field.label }}</label>
+            {{ field }}
+            {% if field.errors %}
+              <div class="text-danger small mt-1">{{ field.errors.0 }}</div>
+            {% endif %}
+          </div>
+          {% endfor %}
+          <div class="mt-4">
+            <button type="submit" class="btn btn-primary">Guardar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

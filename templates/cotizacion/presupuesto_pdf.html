@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Presupuesto #{{ presupuesto.pk }}</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: Arial, sans-serif; font-size: 12px; color: #222; padding: 30px; }
+
+  .header { display: flex; justify-content: space-between; margin-bottom: 30px; }
+  .taller-nombre { font-size: 20px; font-weight: bold; color: #1a1a2e; }
+  .taller-info { font-size: 11px; color: #555; margin-top: 4px; }
+
+  .presupuesto-meta { text-align: right; }
+  .presupuesto-meta .num { font-size: 22px; font-weight: bold; color: #1a1a2e; }
+  .presupuesto-meta .fecha { color: #777; font-size: 11px; }
+
+  .estado-badge {
+    display: inline-block; padding: 2px 10px;
+    border-radius: 12px; font-size: 10px; font-weight: bold;
+    text-transform: uppercase; margin-top: 4px;
+  }
+  .estado-borrador { background: #e2e3e5; color: #555; }
+  .estado-aceptado { background: #d1e7dd; color: #0a5e3c; }
+  .estado-rechazado { background: #f8d7da; color: #842029; }
+
+  .cliente-box {
+    background: #f8f9fa; border-left: 4px solid #1a1a2e;
+    padding: 10px 14px; margin-bottom: 24px; border-radius: 0 4px 4px 0;
+  }
+  .cliente-box .label { font-size: 10px; color: #777; text-transform: uppercase; }
+  .cliente-box .nombre { font-size: 15px; font-weight: bold; }
+
+  table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+  thead th {
+    background: #1a1a2e; color: #fff; padding: 8px 10px;
+    text-align: left; font-size: 11px;
+  }
+  thead th.text-right { text-align: right; }
+  tbody tr:nth-child(even) { background: #f8f9fa; }
+  tbody td { padding: 7px 10px; border-bottom: 1px solid #eee; }
+  .text-right { text-align: right; }
+  .text-muted { color: #888; font-size: 10px; }
+
+  .totales { margin-left: auto; width: 260px; }
+  .totales table { margin-bottom: 0; }
+  .totales tbody td { border: none; padding: 4px 10px; }
+  .totales .total-final { font-size: 14px; font-weight: bold; border-top: 2px solid #1a1a2e; }
+
+  .footer {
+    margin-top: 40px; text-align: center;
+    font-size: 10px; color: #aaa; border-top: 1px solid #eee; padding-top: 10px;
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <div class="taller-nombre">{{ config.nombre }}</div>
+    <div class="taller-info">
+      {% if config.domicilio %}{{ config.domicilio }}<br>{% endif %}
+      {% if config.telefono %}Tel: {{ config.telefono }}  {% endif %}
+      {% if config.email %}{{ config.email }}{% endif %}
+    </div>
+  </div>
+  <div class="presupuesto-meta">
+    <div class="num">Presupuesto #{{ presupuesto.pk }}</div>
+    <div class="fecha">{{ presupuesto.fecha|date:"d/m/Y" }}</div>
+    <div>
+      <span class="estado-badge estado-{{ presupuesto.estado }}">{{ presupuesto.get_estado_display }}</span>
+    </div>
+  </div>
+</div>
+
+<div class="cliente-box">
+  <div class="label">Cliente</div>
+  <div class="nombre">{{ presupuesto.cliente }}</div>
+</div>
+
+<table>
+  <thead>
+    <tr>
+      <th>Código</th>
+      <th>Descripción</th>
+      <th class="text-right">Cant.</th>
+      <th class="text-right">P. Unitario</th>
+      <th class="text-right">Subtotal</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for item in items %}
+    <tr>
+      <td class="text-muted">{{ item.producto.codigo_interno }}</td>
+      <td>{{ item.producto.nombre }}</td>
+      <td class="text-right">{{ item.cantidad }}</td>
+      <td class="text-right">${{ item.precio_unitario|floatformat:2 }}</td>
+      <td class="text-right">${{ item.subtotal|floatformat:2 }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<div class="totales">
+  <table>
+    <tbody>
+      <tr>
+        <td>Repuestos</td>
+        <td class="text-right">${{ presupuesto.subtotal_items|floatformat:2 }}</td>
+      </tr>
+      <tr>
+        <td>Mano de obra</td>
+        <td class="text-right">${{ presupuesto.mano_de_obra|floatformat:2 }}</td>
+      </tr>
+      <tr class="total-final">
+        <td>TOTAL</td>
+        <td class="text-right">${{ presupuesto.total|floatformat:2 }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="footer">
+  {{ config.nombre }} · Presupuesto válido por 48 horas · Generado el {{ presupuesto.fecha|date:"d/m/Y" }}
+</div>
+
+</body>
+</html>

@@ -1,0 +1,28 @@
+{% if q and not productos %}
+<p class="text-muted small py-2">Sin resultados para "{{ q }}".</p>
+{% endif %}
+
+{% for p in productos %}
+<div class="d-flex align-items-center justify-content-between py-2 border-bottom">
+  <div>
+    <span class="fw-semibold" style="font-size:.9rem">{{ p.nombre }}</span>
+    <small class="text-muted d-block">{{ p.codigo_interno }} · {{ p.categoria.nombre }} · Stock: {{ p.stock_actual }}</small>
+  </div>
+  <div class="d-flex align-items-center gap-2">
+    <span class="text-muted small">${{ p.precio_venta|floatformat:2 }}</span>
+    <form
+      hx-post="{% url 'cotizacion:agregar_item' presupuesto.pk %}"
+      hx-target="#lista-items"
+      hx-swap="innerHTML"
+    >
+      {% csrf_token %}
+      <input type="hidden" name="producto_id" value="{{ p.pk }}">
+      <input type="number" name="cantidad" value="1" min="1" max="{{ p.stock_actual }}"
+        class="form-control form-control-sm" style="width:60px; display:inline-block">
+      <button type="submit" class="btn btn-sm btn-primary">
+        <i class="bi bi-plus"></i>
+      </button>
+    </form>
+  </div>
+</div>
+{% endfor %}
