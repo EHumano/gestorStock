@@ -1,0 +1,37 @@
+{% if productos %}
+  {% for p in productos %}
+  <tr>
+    <td class="text-muted small">{{ p.codigo_interno }}</td>
+    <td class="fw-semibold">{{ p.nombre }}</td>
+    <td>{{ p.categoria.nombre }}</td>
+    <td>
+      {% if p.tipo == 'universal' %}
+        <span class="badge bg-info text-dark">Universal</span>
+      {% else %}
+        <span class="badge bg-secondary">Específico</span>
+      {% endif %}
+    </td>
+    <td class="text-end">
+      {% if p.stock_bajo %}
+        <span class="badge bg-danger">{{ p.stock_actual }}</span>
+      {% else %}
+        {{ p.stock_actual }}
+      {% endif %}
+    </td>
+    <td class="text-end">${{ p.costo|floatformat:2 }}</td>
+    <td class="text-end">${{ p.precio_venta|floatformat:2 }}</td>
+    <td class="text-end">
+      <a href="{% url 'catalogo:producto_editar' p.pk %}" class="btn btn-sm btn-outline-secondary">
+        <i class="bi bi-pencil"></i>
+      </a>
+      <a href="{% url 'catalogo:producto_eliminar' p.pk %}" class="btn btn-sm btn-outline-danger">
+        <i class="bi bi-trash"></i>
+      </a>
+    </td>
+  </tr>
+  {% endfor %}
+{% else %}
+  <tr>
+    <td colspan="8" class="text-center text-muted py-4">Sin resultados.</td>
+  </tr>
+{% endif %}

@@ -1,7 +1,49 @@
 {% extends "base.html" %}
 {% block title %}Categorías{% endblock %}
 {% block nav_categorias %}active{% endblock %}
+
 {% block content %}
-<h2>Categorías</h2>
-<p class="text-muted">Próximamente — Fase 2.</p>
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h2 class="mb-0">Categorías</h2>
+  <a href="{% url 'catalogo:categoria_crear' %}" class="btn btn-primary">
+    <i class="bi bi-plus-lg"></i> Nueva categoría
+  </a>
+</div>
+
+{% if categorias %}
+<div class="card shadow-sm border-0">
+  <table class="table table-hover mb-0">
+    <thead class="table-light">
+      <tr>
+        <th>Nombre</th>
+        <th class="text-end">Margen (%)</th>
+        <th class="text-end">Productos</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for cat in categorias %}
+      <tr>
+        <td class="fw-semibold">{{ cat.nombre }}</td>
+        <td class="text-end">{{ cat.margen_porcentaje }}%</td>
+        <td class="text-end">{{ cat.productos.count }}</td>
+        <td class="text-end">
+          <a href="{% url 'catalogo:categoria_editar' cat.pk %}" class="btn btn-sm btn-outline-secondary">
+            <i class="bi bi-pencil"></i>
+          </a>
+          <a href="{% url 'catalogo:categoria_eliminar' cat.pk %}" class="btn btn-sm btn-outline-danger">
+            <i class="bi bi-trash"></i>
+          </a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% else %}
+<div class="text-center text-muted py-5">
+  <i class="bi bi-tags fs-1"></i>
+  <p class="mt-2">No hay categorías aún. <a href="{% url 'catalogo:categoria_crear' %}">Crear la primera</a>.</p>
+</div>
+{% endif %}
 {% endblock %}

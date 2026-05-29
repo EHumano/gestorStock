@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}Importar productos{% endblock %}
+{% block nav_productos %}active{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center gap-2 mb-4">
+  <a href="{% url 'catalogo:producto_lista' %}" class="btn btn-sm btn-outline-secondary">
+    <i class="bi bi-arrow-left"></i>
+  </a>
+  <h2 class="mb-0">Importar productos desde CSV</h2>
+</div>
+
+<div class="row g-4">
+  <div class="col-md-6">
+    <div class="card shadow-sm border-0">
+      <div class="card-body p-4">
+        <form method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="mb-4">
+            <label class="form-label fw-semibold">Archivo CSV</label>
+            <input type="file" name="archivo" accept=".csv" class="form-control" required>
+            <div class="form-text">Codificación UTF-8 o Latin-1. Se actualizan productos existentes por código interno.</div>
+          </div>
+          <button type="submit" class="btn btn-primary">
+            <i class="bi bi-upload"></i> Importar
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="card border-0 bg-light">
+      <div class="card-body p-4">
+        <h6 class="fw-semibold mb-2">Formato del CSV</h6>
+        <p class="small text-muted mb-2">La primera fila debe ser el encabezado con estas columnas:</p>
+        <code class="small d-block bg-white p-2 rounded border">
+          nombre,codigo_interno,tipo,categoria,costo,stock_actual,stock_minimo
+        </code>
+        <ul class="small text-muted mt-3 mb-0">
+          <li><strong>tipo:</strong> <code>especifico</code> o <code>universal</code></li>
+          <li><strong>categoria:</strong> nombre de la categoría (se crea si no existe)</li>
+          <li><strong>costo:</strong> número decimal, usar punto o coma</li>
+          <li>Si el código ya existe, se actualiza el producto</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

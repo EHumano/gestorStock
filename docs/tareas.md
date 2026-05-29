@@ -1,42 +1,42 @@
 # Tareas — Sistema de gestión para talleres de escape y mecánica ligera
 
-> Stack: Django 5.x + HTMX + Bootstrap 5 + SQLite → PostgreSQL  
+> Stack: Django 6.x + HTMX + Bootstrap 5 + SQLite → PostgreSQL  
 > Objetivo: reducir en >50% el tiempo de cotización y gestión de stock, eliminar el uso de Excel.  
 > Ritmo estimado: 1–2 horas diarias · Total: ~7 semanas
 
 ---
 
-## Fase 1 — Fundación del proyecto (~1 semana)
+## Fase 1 — Fundación del proyecto ✅ COMPLETA
 
-- [ ] Crear entorno virtual (`venv`) e instalar Django 5.x
-- [ ] Crear proyecto Django (`django-admin startproject`)
-- [ ] Inicializar repositorio git y primer commit
-- [ ] Configurar SQLite como base de datos de desarrollo
-- [ ] Definir estructura de apps: `core`, `catalogo`, `compatibilidades`, `cotizacion`
-- [ ] Crear template base con navegación lateral (Bootstrap 5)
-- [ ] Implementar login simple con `django.contrib.auth` (un usuario por taller)
+- [x] Crear entorno virtual (`venv`) e instalar Django 6.x
+- [x] Crear proyecto Django (`django-admin startproject`)
+- [x] Inicializar repositorio git y primer commit
+- [x] Configurar SQLite como base de datos de desarrollo
+- [x] Definir estructura de apps: `core`, `catalogo`, `compatibilidades`, `cotizacion`
+- [x] Crear template base con navegación lateral (Bootstrap 5)
+- [x] Implementar login simple con `django.contrib.auth` (un usuario por taller)
 
-**Entregable:** app corriendo en local, login funcionando, estructura de carpetas definida.
+**Entregable:** app corriendo en local, login funcionando, estructura de carpetas definida. ✅
 
 ---
 
-## Fase 2 — Productos y stock (~2 semanas)
+## Fase 2 — Productos y stock ✅ COMPLETA
 
 ### Modelos
-- [ ] `Categoria` — nombre, margen_porcentaje
-- [ ] `Producto` — nombre, codigo_interno, tipo (específico/universal), costo, stock_actual, stock_minimo, FK a Categoria
-- [ ] `Proveedor` — nombre, contacto
-- [ ] `PrecioProveedor` — costo, fecha_actualizacion, FK a Producto y Proveedor
-- [ ] Crear y aplicar migraciones
+- [x] `Categoria` — nombre, margen_porcentaje
+- [x] `Producto` — nombre, codigo_interno, tipo (específico/universal), costo, stock_actual, stock_minimo, FK a Categoria
+- [x] `Proveedor` — nombre, contacto
+- [x] `PrecioProveedor` — costo, fecha_actualizacion, FK a Producto y Proveedor
+- [x] Crear y aplicar migraciones
 
 ### Vistas y templates
-- [ ] CRUD de categorías
-- [ ] CRUD de productos con búsqueda por nombre, código y categoría (HTMX)
-- [ ] CRUD de proveedores y precios por proveedor
-- [ ] Alerta visual cuando el stock baja del mínimo
-- [ ] Vista de importación masiva desde CSV
+- [x] CRUD de categorías
+- [x] CRUD de productos con búsqueda por nombre, código y categoría (HTMX)
+- [x] CRUD de proveedores y precios por proveedor
+- [x] Alerta visual cuando el stock baja del mínimo (badge rojo en tabla)
+- [x] Vista de importación masiva desde CSV
 
-**Entregable:** el taller puede cargar y consultar su catálogo completo sin Excel.
+**Entregable:** el taller puede cargar y consultar su catálogo completo sin Excel. ✅
 
 ---
 
@@ -96,4 +96,4 @@ Facturación fiscal · Contabilidad · CRM · Agenda de turnos · Cálculo autom
 
 ---
 
-*Última actualización: 2026-05-28 — Fase 1 pendiente de inicio.*
+*Última actualización: 2026-05-28 — Fases 1 y 2 completas. Próximo: Fase 3 (Precios y márgenes).*
