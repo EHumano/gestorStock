@@ -1,0 +1,77 @@
+{% if vehiculos is None %}
+<div class="text-center text-muted py-5">
+  <i class="bi bi-car-front fs-1"></i>
+  <p class="mt-2">Ingresá marca, modelo o año para buscar piezas compatibles.</p>
+</div>
+
+{% elif not vehiculos %}
+<div class="text-center text-muted py-4">
+  <i class="bi bi-x-circle fs-2"></i>
+  <p class="mt-2">No se encontraron vehículos con esos datos.</p>
+  <a href="{% url 'compatibilidades:vehiculo_crear' %}" class="btn btn-sm btn-outline-primary mt-1">
+    Agregar vehículo
+  </a>
+</div>
+
+{% else %}
+  {% for vehiculo in vehiculos %}
+  <div class="card shadow-sm border-0 mb-3">
+    <div class="card-header d-flex justify-content-between align-items-center bg-light">
+      <span class="fw-semibold">
+        <i class="bi bi-car-front"></i>
+        {{ vehiculo.marca }} {{ vehiculo.modelo }} {{ vehiculo.anio }}
+      </span>
+      <a href="{% url 'compatibilidades:crear' %}?vehiculo={{ vehiculo.pk }}" class="btn btn-sm btn-outline-primary">
+        <i class="bi bi-plus"></i> Agregar pieza
+      </a>
+    </div>
+
+    {% with comps=vehiculo.compatibilidades.all %}
+    {% if comps %}
+    <table class="table table-sm mb-0">
+      <thead class="table-light" style="font-size:.85rem">
+        <tr>
+          <th>Código</th>
+          <th>Pieza</th>
+          <th>Categoría</th>
+          <th class="text-end">Stock</th>
+          <th class="text-end">Precio venta</th>
+          <th>Nota</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for comp in comps %}
+        <tr>
+          <td class="text-muted small">{{ comp.producto.codigo_interno }}</td>
+          <td class="fw-semibold">{{ comp.producto.nombre }}</td>
+          <td>{{ comp.producto.categoria.nombre }}</td>
+          <td class="text-end">
+            {% if comp.producto.stock_bajo %}
+              <span class="badge bg-danger">{{ comp.producto.stock_actual }}</span>
+            {% else %}
+              {{ comp.producto.stock_actual }}
+            {% endif %}
+          </td>
+          <td class="text-end">${{ comp.producto.precio_venta|floatformat:2 }}</td>
+          <td class="text-muted small fst-italic">{{ comp.nota|default:"—" }}</td>
+          <td class="text-end">
+            <a href="{% url 'compatibilidades:eliminar' comp.pk %}"
+               class="btn btn-sm btn-outline-danger">
+              <i class="bi bi-trash"></i>
+            </a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <div class="p-3 text-muted small">
+      Este vehículo no tiene piezas compatibles cargadas.
+      <a href="{% url 'compatibilidades:crear' %}?vehiculo={{ vehiculo.pk }}">Agregar</a>.
+    </div>
+    {% endif %}
+    {% endwith %}
+  </div>
+  {% endfor %}
+{% endif %}

@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block title %}Vehículos{% endblock %}
+{% block nav_compatibilidades %}active{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div class="d-flex align-items-center gap-2">
+    <a href="{% url 'compatibilidades:lista' %}" class="btn btn-sm btn-outline-secondary">
+      <i class="bi bi-arrow-left"></i>
+    </a>
+    <h2 class="mb-0">Vehículos</h2>
+  </div>
+  <a href="{% url 'compatibilidades:vehiculo_crear' %}" class="btn btn-primary">
+    <i class="bi bi-plus-lg"></i> Nuevo vehículo
+  </a>
+</div>
+
+<div class="mb-3">
+  <form class="d-flex gap-2" method="get">
+    <input type="text" name="q" value="{{ q }}" class="form-control" placeholder="Buscar por marca o modelo...">
+    <button type="submit" class="btn btn-outline-secondary">Buscar</button>
+  </form>
+</div>
+
+{% if vehiculos %}
+<div class="card shadow-sm border-0">
+  <table class="table table-hover mb-0">
+    <thead class="table-light">
+      <tr>
+        <th>Marca</th>
+        <th>Modelo</th>
+        <th class="text-end">Año</th>
+        <th class="text-end">Piezas</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for v in vehiculos %}
+      <tr>
+        <td class="fw-semibold">{{ v.marca }}</td>
+        <td>{{ v.modelo }}</td>
+        <td class="text-end">{{ v.anio }}</td>
+        <td class="text-end">{{ v.compatibilidades.count }}</td>
+        <td class="text-end">
+          <a href="{% url 'compatibilidades:crear' %}?vehiculo={{ v.pk }}"
+             class="btn btn-sm btn-outline-primary" title="Agregar pieza">
+            <i class="bi bi-plus"></i>
+          </a>
+          <a href="{% url 'compatibilidades:vehiculo_editar' v.pk %}"
+             class="btn btn-sm btn-outline-secondary">
+            <i class="bi bi-pencil"></i>
+          </a>
+          <a href="{% url 'compatibilidades:vehiculo_eliminar' v.pk %}"
+             class="btn btn-sm btn-outline-danger">
+            <i class="bi bi-trash"></i>
+          </a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% else %}
+<div class="text-center text-muted py-5">
+  <i class="bi bi-car-front fs-1"></i>
+  <p class="mt-2">
+    {% if q %}No se encontraron vehículos con "{{ q }}".
+    {% else %}No hay vehículos cargados. <a href="{% url 'compatibilidades:vehiculo_crear' %}">Agregar el primero</a>.
+    {% endif %}
+  </p>
+</div>
+{% endif %}
+{% endblock %}

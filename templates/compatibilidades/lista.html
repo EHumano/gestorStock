@@ -1,7 +1,79 @@
 {% extends "base.html" %}
 {% block title %}Compatibilidades{% endblock %}
 {% block nav_compatibilidades %}active{% endblock %}
+
 {% block content %}
-<h2>Compatibilidades</h2>
-<p class="text-muted">Próximamente — Fase 4.</p>
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h2 class="mb-0">Compatibilidades</h2>
+  <div class="d-flex gap-2">
+    <a href="{% url 'compatibilidades:vehiculo_lista' %}" class="btn btn-outline-secondary">
+      <i class="bi bi-car-front"></i> Vehículos
+    </a>
+    <a href="{% url 'compatibilidades:crear' %}" class="btn btn-primary">
+      <i class="bi bi-plus-lg"></i> Nueva compatibilidad
+    </a>
+  </div>
+</div>
+
+<div class="card shadow-sm border-0 mb-4">
+  <div class="card-body p-3">
+    <p class="text-muted small mb-3">
+      <i class="bi bi-search"></i> Buscá qué piezas tenés disponibles para un vehículo.
+    </p>
+    <div class="row g-2">
+      <div class="col-md-4">
+        <input
+          type="text"
+          name="marca"
+          id="campo-marca"
+          class="form-control"
+          placeholder="Marca (ej: Ford)"
+          hx-get="{% url 'compatibilidades:buscar' %}"
+          hx-trigger="keyup changed delay:400ms"
+          hx-target="#resultados"
+          hx-include="#campo-modelo, #campo-anio"
+        >
+      </div>
+      <div class="col-md-4">
+        <input
+          type="text"
+          name="modelo"
+          id="campo-modelo"
+          class="form-control"
+          placeholder="Modelo (ej: Ka)"
+          hx-get="{% url 'compatibilidades:buscar' %}"
+          hx-trigger="keyup changed delay:400ms"
+          hx-target="#resultados"
+          hx-include="#campo-marca, #campo-anio"
+        >
+      </div>
+      <div class="col-md-3">
+        <input
+          type="number"
+          name="anio"
+          id="campo-anio"
+          class="form-control"
+          placeholder="Año (ej: 2015)"
+          min="1950" max="2100"
+          hx-get="{% url 'compatibilidades:buscar' %}"
+          hx-trigger="keyup changed delay:400ms"
+          hx-target="#resultados"
+          hx-include="#campo-marca, #campo-modelo"
+        >
+      </div>
+      <div class="col-md-1 d-flex align-items-center">
+        <span class="text-muted htmx-indicator">
+          <span class="spinner-border spinner-border-sm"></span>
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="resultados">
+  <div class="text-center text-muted py-5">
+    <i class="bi bi-car-front fs-1"></i>
+    <p class="mt-2">Ingresá marca, modelo o año para buscar piezas compatibles.</p>
+  </div>
+</div>
 {% endblock %}

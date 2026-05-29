@@ -51,15 +51,15 @@
 
 ---
 
-## Fase 4 — Compatibilidades (~1 semana)
+## Fase 4 — Compatibilidades ✅ COMPLETA
 
-- [ ] Modelo `Vehiculo` — marca, modelo, anio
-- [ ] Modelo `Compatibilidad` — FK a Producto y Vehículo, campo nota libre
-- [ ] CRUD de vehículos
-- [ ] CRUD de compatibilidades (carga 100% manual, sin IA)
-- [ ] Búsqueda: "¿qué tengo para un Ford Ka 2015?" → lista de piezas compatibles (HTMX)
+- [x] Modelo `Vehiculo` — marca, modelo, anio
+- [x] Modelo `Compatibilidad` — FK a Producto y Vehículo, campo nota libre
+- [x] CRUD de vehículos
+- [x] CRUD de compatibilidades (carga 100% manual, sin IA)
+- [x] Búsqueda: "¿qué tengo para un Ford Ka 2015?" → lista de piezas compatibles (HTMX)
 
-**Entregable:** un empleado puede responder compatibilidades sin preguntarle al dueño.
+**Entregable:** un empleado puede responder compatibilidades sin preguntarle al dueño. ✅
 
 ---
 
@@ -96,4 +96,4 @@ Facturación fiscal · Contabilidad · CRM · Agenda de turnos · Cálculo autom
 
 ---
 
-*Última actualización: 2026-05-28 — Fases 1, 2 y 3 completas. Próximo: Fase 4 (Compatibilidades).*
+*Última actualización: 2026-05-28 — Fases 1 a 4 completas. Próximo: Fase 5 (Cotización — núcleo del MVP).*

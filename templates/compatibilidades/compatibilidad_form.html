@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}{{ titulo }}{% endblock %}
+{% block nav_compatibilidades %}active{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center mt-2">
+  <div class="col-md-6">
+    <div class="d-flex align-items-center gap-2 mb-4">
+      <a href="{% url 'compatibilidades:lista' %}" class="btn btn-sm btn-outline-secondary">
+        <i class="bi bi-arrow-left"></i>
+      </a>
+      <h2 class="mb-0">{{ titulo }}</h2>
+    </div>
+    <div class="card shadow-sm border-0">
+      <div class="card-body p-4">
+        <form method="post">
+          {% csrf_token %}
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Vehículo</label>
+            {{ form.vehiculo }}
+            {% if form.vehiculo.errors %}
+              <div class="text-danger small mt-1">{{ form.vehiculo.errors.0 }}</div>
+            {% endif %}
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Pieza / Producto</label>
+            {{ form.producto }}
+            {% if form.producto.errors %}
+              <div class="text-danger small mt-1">{{ form.producto.errors.0 }}</div>
+            {% endif %}
+          </div>
+          <div class="mb-4">
+            <label class="form-label fw-semibold">Nota <span class="text-muted fw-normal">(opcional)</span></label>
+            {{ form.nota }}
+            <div class="form-text">Ej: "sirve adaptando soporte", "universal para escape 1¾"</div>
+          </div>
+          <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-primary">Guardar</button>
+            <a href="{% url 'compatibilidades:lista' %}" class="btn btn-outline-secondary">Cancelar</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
