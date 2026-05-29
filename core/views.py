@@ -24,6 +24,11 @@ class TallerConfigForm(forms.ModelForm):
 
 
 @login_required
+def instructivo(request):
+    return render(request, 'core/instructivo.html')
+
+
+@login_required
 def taller_config(request):
     config = TallerConfig.get()
     form = TallerConfigForm(request.POST or None, instance=config)

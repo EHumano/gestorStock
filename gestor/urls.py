@@ -9,6 +9,7 @@ urlpatterns = [
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('', core_views.inicio, name='inicio'),
     path('configuracion/', core_views.taller_config, name='configuracion'),
+    path('instructivo/', core_views.instructivo, name='instructivo'),
     path('catalogo/', include('catalogo.urls')),
     path('compatibilidades/', include('compatibilidades.urls')),
     path('cotizacion/', include('cotizacion.urls')),
